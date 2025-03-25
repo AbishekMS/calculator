@@ -1,29 +1,32 @@
 package com.example.calculator.Controller;
-
 import com.example.calculator.Services.CalculatorServices;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-
 import com.example.calculator.model.CalculatorResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-//@AllArgsConstructor
+@RequestMapping("/calculator")
 @RequiredArgsConstructor
 public class CalculatorController {
 
    private final CalculatorServices cs;
 
-    @GetMapping("/welcome")
-    public String welcome(){
-        return "Welcome man";
-    }
-   @GetMapping("/calculate/{id}")
-    public CalculatorResponse calculate( @PathVariable double id,@RequestParam double num2,
-                                         @RequestParam String op)
+   @PostMapping("/calculate")
+    public CalculatorResponse calculate( @RequestParam Double num1,@RequestParam Double num2,@RequestParam String op)
     {
-        return cs.calculate(id,num2,op);
+        return cs.calculate(num1,num2,op);
+    }
+
+    @GetMapping("/history")
+    public List<CalculatorResponse> getHistory(){
+       return cs.getCalculationHistory();
+    }
+
+    @DeleteMapping("/deleteHistory")
+    public void deleteHistory(){
+       cs.cleanHistory();
     }
 
 }
