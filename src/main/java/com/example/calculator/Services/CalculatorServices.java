@@ -5,13 +5,17 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class CalculatorServices {
     private final List<CalculatorResponse> history= new ArrayList<>();
+    private static Integer id=0;
     public CalculatorResponse calculate(Double num1, Double num2, String operation) {
+        DateTimeFormatter format= DateTimeFormatter.ofPattern("dd-mm-yyyy HH:MM");
+        id++;
         try {
             double result = switch (operation.toLowerCase().trim()) {
                 case "add" -> num1 + num2;
@@ -47,18 +51,21 @@ public class CalculatorServices {
                 default -> throw new IllegalStateException("Unexpected value: " + operation.toLowerCase()); //generated through error message
             };
             String expression = num1+operator+num2+" = "+result;
-            CalculatorResponse response= new CalculatorResponse(result, expression, LocalDateTime.now(),null);
-            // CalculatorResponse(result, expression, Calculatedtime, errorMsg)
+            String timing= LocalDateTime.now().format(format);
+            CalculatorResponse response= new CalculatorResponse(id,result, expression,timing,null);
+            // CalculatorResponse(id,result, expression, Calculatedtime, errorMsg)
             history.add(response);
             return response;
 
 
         } catch( Exception e){
             String expression= num1+" "+operation+" "+num2;
-            CalculatorResponse errorResponse= new CalculatorResponse(null, expression, LocalDateTime.now(),e.getMessage() );
+            String timing= LocalDateTime.now().format(format);
+            CalculatorResponse errorResponse= new CalculatorResponse(id,null, expression, timing,e.getMessage() );
             history.add(errorResponse);
             return errorResponse;
         }
+
     }
 
     public List<CalculatorResponse> getCalculationHistory() {
@@ -69,4 +76,19 @@ public class CalculatorServices {
         history.clear();
         return "History cleared successfully";
     }
+
+    public String deleteHistoryById(Integer id) {
+
+        for(CalculatorResponse res: history){
+            Integer idName= res.getId();
+            if(idName.equals(id)){
+             history.remove(res);
+             return "Id :"+idName+" deleted successfully";
+            }
+
+        }
+        return "Id not found";
+
+    }
+
 }

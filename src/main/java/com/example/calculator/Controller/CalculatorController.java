@@ -24,9 +24,14 @@ public class CalculatorController {
        return cs.getCalculationHistory();
     }
 
+    @DeleteMapping("/deleteHistoryById/{id}")
+    public String deleteHistoryById(@PathVariable Integer id){
+       return cs.deleteHistoryById(id);
+    }
+
     @DeleteMapping("/deleteHistory")
-    public void deleteHistory(){
-       cs.cleanHistory();
+    public String deleteHistory(){
+       return cs.cleanHistory();
     }
 
 }

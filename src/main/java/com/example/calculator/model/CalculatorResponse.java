@@ -10,8 +10,12 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 public class CalculatorResponse {
+
+    private Integer id;
     private Double result;
     private String expression;
-    private LocalDateTime calculatedTime;
+    private String calculatedTime;
     private String errorMsg;
+
+
 }
