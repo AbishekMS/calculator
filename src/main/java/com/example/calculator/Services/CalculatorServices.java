@@ -1,6 +1,7 @@
 package com.example.calculator.Services;
 
 import com.example.calculator.model.CalculatorResponse;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -10,12 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class CalculatorServices {
-    private final List<CalculatorResponse> history= new ArrayList<>();
-    private static Integer id=0;
+    private final HistoryService history;
+
     public CalculatorResponse calculate(Double num1, Double num2, String operation) {
         DateTimeFormatter format= DateTimeFormatter.ofPattern("dd-mm-yyyy HH:MM");
-        id++;
+
         try {
             double result = switch (operation.toLowerCase().trim()) {
                 case "add" -> num1 + num2;
@@ -52,42 +54,19 @@ public class CalculatorServices {
             };
             String expression = num1+operator+num2+" = "+result;
             String timing= LocalDateTime.now().format(format);
-            CalculatorResponse response= new CalculatorResponse(id,result, expression,timing,null);
-            // CalculatorResponse(id,result, expression, Calculatedtime, errorMsg)
-            history.add(response);
+            CalculatorResponse response= new CalculatorResponse(result, expression,timing,null);
+            // CalculatorResponse(result, expression, Calculatedtime, errorMsg)
+            history.addToHistory(response);
             return response;
 
 
         } catch( Exception e){
             String expression= num1+" "+operation+" "+num2;
             String timing= LocalDateTime.now().format(format);
-            CalculatorResponse errorResponse= new CalculatorResponse(id,null, expression, timing,e.getMessage() );
-            history.add(errorResponse);
+            CalculatorResponse errorResponse= new CalculatorResponse(null, expression, timing,e.getMessage() );
+            history.addToHistory(errorResponse);
             return errorResponse;
         }
-
-    }
-
-    public List<CalculatorResponse> getCalculationHistory() {
-        return history;
-    }
-
-    public String cleanHistory() {
-        history.clear();
-        return "History cleared successfully";
-    }
-
-    public String deleteHistoryById(Integer id) {
-
-        for(CalculatorResponse res: history){
-            Integer idName= res.getId();
-            if(idName.equals(id)){
-             history.remove(res);
-             return "Id :"+idName+" deleted successfully";
-            }
-
-        }
-        return "Id not found";
 
     }
 

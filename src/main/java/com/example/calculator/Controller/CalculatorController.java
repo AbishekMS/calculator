@@ -1,5 +1,6 @@
 package com.example.calculator.Controller;
 import com.example.calculator.Services.CalculatorServices;
+import com.example.calculator.Services.HistoryService;
 import lombok.RequiredArgsConstructor;
 import com.example.calculator.model.CalculatorResponse;
 import org.springframework.web.bind.annotation.*;
@@ -7,11 +8,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/calculator")
+@RequestMapping("/normal")
 @RequiredArgsConstructor
 public class CalculatorController {
 
    private final CalculatorServices cs;
+   private final HistoryService history;
 
    @PostMapping("/calculate")
     public CalculatorResponse calculate( @RequestParam Double num1,@RequestParam Double num2,@RequestParam String op)
@@ -21,17 +23,17 @@ public class CalculatorController {
 
     @GetMapping("/history")
     public List<CalculatorResponse> getHistory(){
-       return cs.getCalculationHistory();
+       return history.getCalculationHistory();
     }
 
     @DeleteMapping("/deleteHistoryById/{id}")
     public String deleteHistoryById(@PathVariable Integer id){
-       return cs.deleteHistoryById(id);
+       return history.deleteHistoryById(id);
     }
 
     @DeleteMapping("/deleteHistory")
     public String deleteHistory(){
-       return cs.cleanHistory();
+       return history.cleanHistory();
     }
 
 }
