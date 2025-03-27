@@ -1,5 +1,6 @@
 package com.example.calculator.Controller;
 
+import com.example.calculator.ExceptionHandler.InvalidOperations;
 import com.example.calculator.Services.HistoryService;
 import com.example.calculator.Services.ScientificServices;
 import com.example.calculator.model.CalculatorResponse;
@@ -18,7 +19,9 @@ public class ScientificController {
 
     @PostMapping("/calculate")
     public CalculatorResponse calculate(@RequestParam Double num1, @RequestParam String op){
-        return scientifc.calculate(num1,op);
+           if(op.isBlank() || op==null) throw new InvalidOperations("Mention the name of Operation to be performed");
+
+            return scientifc.calculate(num1,op);
     }
 
     @GetMapping("/history")

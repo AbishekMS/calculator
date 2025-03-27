@@ -1,8 +1,11 @@
 package com.example.calculator.Controller;
+import com.example.calculator.ExceptionHandler.InvalidOperations;
 import com.example.calculator.Services.CalculatorServices;
 import com.example.calculator.Services.HistoryService;
 import lombok.RequiredArgsConstructor;
 import com.example.calculator.model.CalculatorResponse;
+import org.apache.coyote.Response;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,25 +18,26 @@ public class CalculatorController {
    private final CalculatorServices cs;
    private final HistoryService history;
 
-   @PostMapping("/calculate")
-    public CalculatorResponse calculate( @RequestParam Double num1,@RequestParam Double num2,@RequestParam String op)
+    @PostMapping("/calculate")
+    public ResponseEntity<CalculatorResponse> calculate(@RequestParam Double num1, @RequestParam Double num2, @RequestParam(required = false) String op)
     {
-        return cs.calculate(num1,num2,op);
+        if( op==null || op.isBlank()) throw new InvalidOperations("Mention the name of Operation to be performed");
+        return ResponseEntity.ok(cs.calculate(num1,num2,op));
     }
 
     @GetMapping("/history")
-    public List<CalculatorResponse> getHistory(){
-       return history.getCalculationHistory();
+    public ResponseEntity<List<CalculatorResponse>> getHistory(){
+       return ResponseEntity.ok(history.getCalculationHistory());
     }
 
     @DeleteMapping("/deleteHistoryById/{id}")
-    public String deleteHistoryById(@PathVariable Integer id){
-       return history.deleteHistoryById(id);
+    public ResponseEntity<String> deleteHistoryById(@PathVariable Integer id){
+       return ResponseEntity.ok(history.deleteHistoryById(id));
     }
 
     @DeleteMapping("/deleteHistory")
-    public String deleteHistory(){
-       return history.cleanHistory();
+    public ResponseEntity<String> deleteHistory(){
+       return ResponseEntity.ok(history.cleanHistory());
     }
 
 }

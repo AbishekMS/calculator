@@ -24,13 +24,7 @@ public class HistoryService {
     }
 
     public String deleteHistoryById(Integer id) {
-        for(CalculatorResponse res: history){
-            Integer idName= res.getId();
-            if(idName.equals(id)){
-                history.remove(res);
-                return "Id :"+idName+" deleted successfully";
-            }
-        }
-        return "Id not found";
+       boolean bool= history.removeIf(res-> res.getId().equals(id));
+        return bool ? "Id: "+id+" deleted successfully" : "Id not found";
     }
 }

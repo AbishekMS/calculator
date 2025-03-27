@@ -1,14 +1,11 @@
 package com.example.calculator.Services;
 
+import com.example.calculator.ExceptionHandler.InvalidOperations;
 import com.example.calculator.model.CalculatorResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -25,21 +22,21 @@ public class CalculatorServices {
                 case "multiply" -> num1 * num2;
                 case "divide" -> {
                     if (num2 == 0)
-                        throw new IllegalArgumentException("Cannot divide by zero");
+                        throw new InvalidOperations("Cannot divide by zero");
                     yield num1/num2;
                 }
                 case "power" -> Math.pow(num1, num2);
                 case "root" -> {
                     if(num1<0 && num2%2==0)
-                        throw new IllegalArgumentException("Cannot take even number for negative numbers");
+                        throw new InvalidOperations("Cannot take even number for negative numbers");
                     yield Math.pow(num1,num2);
                 }
                 case "module" -> {
-                    if(num2==0) throw new IllegalArgumentException("second number should not be zero");
+                    if(num2==0) throw new InvalidOperations("second number should not be zero");
                     yield num1%num2;
                 }
                 case "percentage" -> (num1/num2)*100;
-                default -> throw new IllegalArgumentException("Invalid operation ");
+                default -> throw new InvalidOperations("Invalid operation ");
             };
             String operator= switch(operation.toLowerCase().trim()){
                 case "add"->" + ";
@@ -50,7 +47,7 @@ public class CalculatorServices {
                 case "root" -> " √ "; //alt+ 251
                 case "module" -> " % ";
                 case "percentage"->" % of ";
-                default -> throw new IllegalStateException("Unexpected value: " + operation.toLowerCase()); //generated through error message
+                default -> throw new InvalidOperations("Unexpected value: " + operation.toLowerCase()); //generated through error message
             };
             String expression = num1+operator+num2+" = "+result;
             String timing= LocalDateTime.now().format(format);
@@ -60,7 +57,7 @@ public class CalculatorServices {
             return response;
 
 
-        } catch( Exception e){
+        } catch( InvalidOperations e){
             String expression= num1+" "+operation+" "+num2;
             String timing= LocalDateTime.now().format(format);
             CalculatorResponse errorResponse= new CalculatorResponse(null, expression, timing,e.getMessage() );
