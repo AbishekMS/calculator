@@ -39,7 +39,7 @@ public class ScientificServices {
              };
              String expression= operation+"("+num1+")";
              String timing= LocalDateTime.now().format(format);
-             CalculatorResponse response=new CalculatorResponse(Double.valueOf(df.format(result)), expression, timing,"null");
+             CalculatorResponse response=new CalculatorResponse(null,Double.valueOf(df.format(result)), expression, timing,"null");
              // CalculatorResponse(id,result, expression, Calculatedtime, errorMsg)
              history.addToHistory(response);
              return response;
@@ -47,7 +47,7 @@ public class ScientificServices {
          } catch (Exception e){
              String expression= operation+"("+num1+")";
              String timing = LocalDateTime.now().format(format);
-             CalculatorResponse errorResponse=new CalculatorResponse(null, expression, timing,e.getMessage());
+             CalculatorResponse errorResponse=new CalculatorResponse(null,null, expression, timing,e.getMessage());
              history.addToHistory(errorResponse);
              return errorResponse;
 

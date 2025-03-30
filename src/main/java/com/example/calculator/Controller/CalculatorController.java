@@ -5,18 +5,26 @@ import com.example.calculator.Services.HistoryService;
 import lombok.RequiredArgsConstructor;
 import com.example.calculator.model.CalculatorResponse;
 import org.apache.coyote.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/normal")
-@RequiredArgsConstructor
+//@RequiredArgsConstructor   // either use this annotation for final fields or avoid final and use @Autowired annotation
 public class CalculatorController {
 
-   private final CalculatorServices cs;
-   private final HistoryService history;
+    private final CalculatorServices cs;
+    private final HistoryService history;
+
+    @Autowired
+    public CalculatorController(CalculatorServices cs,HistoryService his){
+        this.cs=cs;
+        history=his;
+    }
 
     @PostMapping("/calculate")
     public ResponseEntity<CalculatorResponse> calculate(@RequestParam Double num1, @RequestParam Double num2, @RequestParam(required = false) String op)
@@ -38,6 +46,21 @@ public class CalculatorController {
     @DeleteMapping("/deleteHistory")
     public ResponseEntity<String> deleteHistory(){
        return ResponseEntity.ok(history.cleanHistory());
+    }
+
+    @DeleteMapping("/deleteHistoryfromDB")
+    public ResponseEntity<String> deleteHistoryFromDB(){
+        return ResponseEntity.ok(history.clearHistoryFromH2DB());
+    }
+
+    @GetMapping("/historyfromDB")
+    public ResponseEntity<List<CalculatorResponse>> getHistoryfromDB(){
+        return ResponseEntity.ok(history.getCalculationHistoryfromH2DB());
+    }
+
+    @DeleteMapping("/deletefromDB/{id}")
+    public ResponseEntity<String> deleteHistoryFromH2DB(@PathVariable Integer id){
+        return ResponseEntity.ok(history.deleteHistoryByIdfromH2DB(id));
     }
 
 }

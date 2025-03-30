@@ -1,8 +1,8 @@
 package com.example.calculator.Services;
-
 import com.example.calculator.ExceptionHandler.InvalidOperations;
 import com.example.calculator.model.CalculatorResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -10,10 +10,11 @@ import java.time.format.DateTimeFormatter;
 @Service
 @AllArgsConstructor
 public class CalculatorServices {
+
     private final HistoryService history;
 
     public CalculatorResponse calculate(Double num1, Double num2, String operation) {
-        DateTimeFormatter format= DateTimeFormatter.ofPattern("dd-mm-yyyy HH:MM");
+        DateTimeFormatter format= DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 
         try {
             double result = switch (operation.toLowerCase().trim()) {
@@ -51,7 +52,7 @@ public class CalculatorServices {
             };
             String expression = num1+operator+num2+" = "+result;
             String timing= LocalDateTime.now().format(format);
-            CalculatorResponse response= new CalculatorResponse(result, expression,timing,null);
+            CalculatorResponse response= new CalculatorResponse(null,result, expression,timing,null);
             // CalculatorResponse(result, expression, Calculatedtime, errorMsg)
             history.addToHistory(response);
             return response;
@@ -60,7 +61,7 @@ public class CalculatorServices {
         } catch( InvalidOperations e){
             String expression= num1+" "+operation+" "+num2;
             String timing= LocalDateTime.now().format(format);
-            CalculatorResponse errorResponse= new CalculatorResponse(null, expression, timing,e.getMessage() );
+            CalculatorResponse errorResponse= new CalculatorResponse(null,null, expression, timing,e.getMessage() );
             history.addToHistory(errorResponse);
             return errorResponse;
         }
