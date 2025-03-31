@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 @AllArgsConstructor
 public class CalculatorServices {
 
-    private final HistoryService history;
+    private  HistoryService history;
 
     public CalculatorResponse calculate(Double num1, Double num2, String operation) {
         DateTimeFormatter format= DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");

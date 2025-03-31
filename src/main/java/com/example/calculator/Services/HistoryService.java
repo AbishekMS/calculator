@@ -12,7 +12,7 @@ import java.util.List;
 public class HistoryService {
     private final List<CalculatorResponse> history= new ArrayList<>();
 
-    private HistoryRepository historyrepos; // field injection or else go with constructor injection
+    private final HistoryRepository historyrepos; // field injection or else go with constructor injection
 
     @Autowired
     public HistoryService(HistoryRepository repos){

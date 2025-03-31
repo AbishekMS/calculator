@@ -6,6 +6,7 @@ import com.example.calculator.Services.ScientificServices;
 import com.example.calculator.model.CalculatorResponse;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,8 +15,11 @@ import java.util.List;
 @RequestMapping("/scientific")
 @RequiredArgsConstructor
 public class ScientificController {
-    private final ScientificServices scientifc;
-    private final HistoryService history;
+
+    @Autowired
+    private ScientificServices scientifc;
+    @Autowired
+    private HistoryService history;
 
     @PostMapping("/calculate")
     public CalculatorResponse calculate(@RequestParam Double num1, @RequestParam String op){

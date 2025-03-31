@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/normal")
 //@RequiredArgsConstructor   // either use this annotation for final fields or avoid final and use @Autowired annotation
 public class CalculatorController {
 
-    private final CalculatorServices cs;
+    private CalculatorServices cs;
     private final HistoryService history;
 
     @Autowired
